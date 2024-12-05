@@ -48,6 +48,7 @@ app.get('/', (req, res) => {
     res.send('Szius! <3')
 })
 
+// All users
 app.get('/api/users', (req, res) => {
     db.all("SELECT * FROM users", (error, data) => {
         if(error) {
@@ -55,6 +56,21 @@ app.get('/api/users', (req, res) => {
         }
 
         res.json(data)
+    })
+})
+
+app.get('/api/users:email', (req, res) => {
+    const email = req.params.email
+
+    db.get("SELECT * FROM users WHERE email = ?", [email], (error, data) => {
+        if(error) {
+            console.log(error)
+        }
+
+        if(!data) {
+            res.status(404).json({error: "User not found!"})
+        }
+        res.status(200).json(data)
     })
 })
 
