@@ -14,6 +14,7 @@
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
     "path": "^0.12.7",
+    "sqlite-feladat": "file:",
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
