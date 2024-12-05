@@ -94,4 +94,54 @@ app.post('/api/users', (req, res) => {
     })
 })
 
+// Modify a user
+app.put('/api/users/:id', (req, res) => {
+    const id = req.params.id
+    db.get("SELECT * FROM users WHERE id = ?", id, (error, data) => {
+        if(error) {
+            return res.status(500).json({error: error.message})
+        }
+        if(!data) {
+            return res.status(404).json({error: "User not found!"})
+        }
+        
+        db.run("UPDATE users SET firstName = ?, lastName = ?, email = ?, address = ? WHERE id = ?",
+            [
+                req.body.firstName,
+                req.body.lastName,
+                req.body.email,
+                req.body.address,
+                id
+            ],
+            function(err) {
+                if(err) {
+                    return res.status(500).json({ error: err.message })
+                }
+                res.status(200).json({ id: id, ...req.body })
+            }
+        )
+    })
+})
+
+// Delete a user
+app.delete('/api/users/:id', (req, res) => {
+    const id = req.params.id
+
+    db.get("SELECT * FROM users WHERE id = ?", id, (error, data) => {
+        if(error) {
+            return res.status(500).json({ error: error.message })
+        }
+        if(!data) {
+            return res.status(404).json({ message: "User not found." })
+        }
+
+        db.run("DELETE FROM users WHERE id = ?", id, function(err) {
+            if(err) {
+                return res.status(500).json({ error: err })
+            }
+            res.sendStatus(204)
+        })
+    })
+})
+
 app.listen(3000)
