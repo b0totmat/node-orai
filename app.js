@@ -6,6 +6,7 @@ const db = new sqlite3.Database("./database.sqlite")
 
 /*
     User {
+        id
         email
         firstName
         lastName
@@ -36,7 +37,7 @@ let users = [
 
 db.serialize(() => {
     db.run("DROP TABLE IF EXISTS users")
-    db.run("CREATE TABLE users (email TEXT PRIMARY KEY, firstName TEXT, lastName TEXT, address TEXT)")
+    db.run("CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, firstName TEXT, lastName TEXT, address TEXT)")
 
     for (const u of users) {
         db.run("INSERT INTO users (firstName, lastName, email, address) VALUES (?, ?, ?, ?)", [u.firstName, u.lastName, u.email, u.address])
@@ -59,16 +60,17 @@ app.get('/api/users', (req, res) => {
     })
 })
 
-app.get('/api/users:email', (req, res) => {
-    const email = req.params.email
-
-    db.get("SELECT * FROM users WHERE email = ?", [email], (error, data) => {
+// User by id
+app.get('/api/users/:id', (req, res) => {
+    const id = req.params.id
+    
+    db.get("SELECT * FROM users WHERE id = ?", [id], (error, data) => {
         if(error) {
-            console.log(error)
+            return res.status(500).json({error: error.message})
         }
 
         if(!data) {
-            res.status(404).json({error: "User not found!"})
+            return res.status(404).json({error: "User not found!"})
         }
         res.status(200).json(data)
     })
