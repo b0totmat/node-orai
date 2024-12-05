@@ -64,7 +64,7 @@ app.get('/api/users', (req, res) => {
 app.get('/api/users/:id', (req, res) => {
     const id = req.params.id
     
-    db.get("SELECT * FROM users WHERE id = ?", [id], (error, data) => {
+    db.get("SELECT * FROM users WHERE id = ?", id, (error, data) => {
         if(error) {
             return res.status(500).json({error: error.message})
         }
@@ -73,6 +73,24 @@ app.get('/api/users/:id', (req, res) => {
             return res.status(404).json({error: "User not found!"})
         }
         res.status(200).json(data)
+    })
+})
+
+// New user
+app.post('/api/users', (req, res) => {
+    db.run("INSERT INTO users (firstName, lastName, email, address) VALUES (?, ?, ?, ?)", [
+        req.body.firstName,
+        req.body.lastName,
+        req.body.email,
+        req.body.address
+    ], function(error) {
+        if(error) {
+            return res.status(500).json({ error: error.message })
+        }
+        res.status(201).json({
+            id: this.lastID,
+            ...req.body
+        })
     })
 })
 
