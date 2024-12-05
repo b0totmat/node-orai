@@ -1,8 +1,11 @@
 import express from "express"
 import sqlite3 from 'sqlite3'
+import swaggerUi from 'swagger-ui-express'
+import { readFile } from 'fs/promises'
 
 const app = express()
 const db = new sqlite3.Database("./database.sqlite")
+const swaggerDocument = JSON.parse(await readFile(new URL('./swagger-output.json', import.meta.url)))
 
 /*
     User {
@@ -43,7 +46,9 @@ db.serialize(() => {
         db.run("INSERT INTO users (firstName, lastName, email, address) VALUES (?, ?, ?, ?)", [u.firstName, u.lastName, u.email, u.address])
     }
 })
+
 app.use(express.json())
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.get('/', (req, res) => {
     res.send('Szius! <3')
