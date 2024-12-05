@@ -144,9 +144,4 @@ app.delete('/api/users/:id', (req, res) => {
     })
 })
 
-// Swagger
-app.get('/api/users/docs', (req, res) => {
-
-})
-
 app.listen(3000)
