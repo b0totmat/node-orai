@@ -118,4 +118,24 @@ app.put('/products/:id', (req, res) => {
     })
 })
 
+// Delete a product
+app.delete('/products/:id', (req, res) => {
+    const id = req.params.id
+    db.get('SELECT * FROM products WHERE id = ?', id, (err, data) => {
+        if(err) {
+            return res.status(500).json({ message: err.message })
+        }
+        if(!data) {
+            return res.status(404).json({ message: `Failed to find product with the id of ${id}.` })
+        }
+
+        db.run('DELETE FROM products WHERE id = ?', id, function(error) {
+            if(error) {
+                return res.status(500).json({ message: error.message })
+            }
+            res.sendStatus(204)
+        })
+    })
+})
+
 app.listen(3000)
