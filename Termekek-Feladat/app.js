@@ -80,4 +80,18 @@ app.get('/products/:id', (req, res) => {
     })
 })
 
+// New product
+app.post('/products', (req, res) => {
+    db.run(
+        'INSERT INTO products (name, description, picture, price) VALUES (?, ?, ?, ?)',
+        [req.body.name, req.body.description, req.body.picture, req.body.price],
+        function(err) {
+            if(err) {
+                return res.status(500).json({ message: err.message })
+            }
+            res.status(201).json({ id: this.lastID, ...req.body })
+        }
+    )
+})
+
 app.listen(3000)
