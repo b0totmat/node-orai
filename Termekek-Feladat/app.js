@@ -94,4 +94,28 @@ app.post('/products', (req, res) => {
     )
 })
 
+// Modify a product
+app.put('/products/:id', (req, res) => {
+    const id = req.params.id
+    db.get('SELECT * FROM products WHERE id = ?', id, (err, data) => {
+        if(err) {
+            return res.status(500).json({ message: err.message })
+        }
+        if(!data) {
+            return res.status(404).json({ message: `Failed to find product with the id of ${rid}.` })
+        }
+
+        db.run(
+            'UPDATE products SET name = ?, description = ?, picture = ?, price = ? WHERE id = ?',
+            [req.body.name, req.body.description, req.body.picture, req.body.price, id],
+            function(error) {
+                if(error) {
+                    return res.status(500).json({ message: error.message })
+                }
+                res.status(200).json({ id: Number(id), ...req.body })
+            }
+        )
+    })
+})
+
 app.listen(3000)
