@@ -14,6 +14,30 @@ const app = express(),
     }
 */
 
+const testData = [
+    {
+        id: 1,
+        name: 'Tej',
+        description: 'Moooo',
+        picture: 'https://www.fda.gov/files/standard_milk_ordinance_centennial_1600x900.png',
+        price: '300 Ft'
+    },
+    {
+        id: 2,
+        name: 'Gumikesztyű',
+        description: 'Ez most mocskos lesz!',
+        picture: 'https://images-fibreglast-com.s3.amazonaws.com/pio-resized/750/Latex%20Gloves-1.jpg',
+        price: '1250 Ft'
+    },
+    {
+        id: 3,
+        name: 'Pulóver',
+        description: 'Meg ne fagyj!',
+        picture: 'https://image-resizing.booztcdn.com/julesweaters/jul22orga15_cgreen_1.webp?has_grey=1&has_webp=1&dpr=2.5&size=w400',
+        price: '3590 Ft'
+    }
+]
+
 db.serialize(() => {
     db.run('DROP TABLE IF EXISTS products')
     db.run('CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, picture TEXT, price TEXT)')
