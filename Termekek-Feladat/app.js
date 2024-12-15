@@ -25,4 +25,14 @@ app.get('/', (req, res) => {
     res.send('<h1>Hello World!</h1>')
 })
 
+// All products
+app.get('/products', (req, res) => {
+    db.all('SELECT * FROM products', (err, data) => {
+        if(err) {
+            return res.status(500).json({ message: err.message })
+        }
+        res.status(200).json(data)
+    })
+})
+
 app.listen(3000)
