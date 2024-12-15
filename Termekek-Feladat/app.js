@@ -66,4 +66,18 @@ app.get('/products', (req, res) => {
     })
 })
 
+// Get product by id
+app.get('/products/:id', (req, res) => {
+    db.get('SELECT * FROM products WHERE id = ?', req.params.id, (err, data) => {
+        if(err) {
+            return res.status(500).json({ message: err.message })
+        }
+        if(!data) {
+            return res.status(404).json({ message: `Failed to find product with the id of ${req.params.id}.` })
+        }
+        
+        res.status(200).json(data)
+    })
+})
+
 app.listen(3000)
