@@ -2,7 +2,7 @@ import express from 'express'
 import sqlite3 from 'sqlite3'
 
 const app = express(),
-      db  = sqlite3.Database('./database.sqlite')
+      db  = new sqlite3.Database('./database.sqlite')
 
 /*
     Product {
@@ -41,6 +41,13 @@ const testData = [
 db.serialize(() => {
     db.run('DROP TABLE IF EXISTS products')
     db.run('CREATE TABLE products (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, description TEXT, picture TEXT, price TEXT)')
+
+    for(const p of testData) {
+        db.run(
+            'INSERT INTO products (name, description, picture, price) VALUES (?, ?, ?, ?)',
+            [p.name, p.description, p.picture, p.price]
+        )
+    }
 })
 
 app.use(express.json())
